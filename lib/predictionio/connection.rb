@@ -38,6 +38,7 @@ module PredictionIO
                   case package[:method]
                   when 'get'
                     http_req = Net::HTTP::Get.new("#{uri.path}#{request.qpath}")
+                    http_req['Host'] = uri.host
                     begin
                       response.set(http.request(http_req))
                     rescue Exception => details
@@ -51,6 +52,7 @@ module PredictionIO
                       http_req = Net::HTTP::Post.new("#{uri.path}#{request.path}", initheader = { 'Content-Type' => 'application/json; charset=utf-8' })
                       http_req.body = request.params
                     end
+                    http_req['Host'] = uri.host
                     begin
                       response.set(http.request(http_req))
                     rescue Exception => details
@@ -58,6 +60,7 @@ module PredictionIO
                     end
                   when 'delete'
                     http_req = Net::HTTP::Delete.new("#{uri.path}#{request.qpath}")
+                    http_req['Host'] = uri.host
                     begin
                       response.set(http.request(http_req))
                     rescue Exception => details
