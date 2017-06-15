@@ -1,3 +1,5 @@
+require 'openssl'
+
 module PredictionIO
 
   # This class handles multithreading and asynchronous requests transparently for the REST client.
@@ -22,7 +24,8 @@ module PredictionIO
       threads.times do
         Thread.new do
           begin
-            Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+            http_opts = { use_ssl: uri.scheme == 'https', verify_mode: OpenSSL::SSL::VERIFY_NONE }
+            Net::HTTP.start(uri.host, uri.port, http_opts) do |http|
               @counter_lock.synchronize do
                 @connections += 1
               end
